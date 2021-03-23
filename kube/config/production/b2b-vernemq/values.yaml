@@ -1,0 +1,136 @@
+replicaCount: 5
+
+image:
+  repository: 017989227367.dkr.ecr.ap-northeast-1.amazonaws.com/ls-server/mqtt-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: LoadBalancer
+  mqtt:
+    enabled: true
+    port: 1885
+    # This is the port used by nodes to expose the service
+    nodePort: 1885
+  mqtts:
+    enabled: false
+    port: 8883
+    # This is the port used by nodes to expose the service
+    nodePort: 8883
+  ws:
+    enabled: false
+    port: 8080
+    # This is the port used by nodes to expose the service
+    nodePort: 8080
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::017989227367:server-certificate/b2b-vmq-co-jp-21-22"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "*"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "60"
+  labels: {}
+
+resources:
+  limits:
+    cpu: 2
+    memory: 2000Mi
+  requests:
+    cpu: 1
+    memory: 1000Mi
+
+securityContext:
+  runAsUser: 10000
+  runAsGroup: 10000
+  fsGroup: 10000
+
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+
+nodeAffinity:
+  soft:
+    - weight: 1
+      preference:
+        matchExpressions:
+          - key: eks.amazonaws.com/nodegroup
+            operator: In
+            values:
+              - sts-prio-1
+
+persistentVolume:
+  enabled: false
+  accessModes:
+    - ReadWriteOnce
+
+  size: 5Gi
+
+statefulset:
+#  podManagementPolicy: OrderedReady
+  podManagementPolicy: Parallel
+  updateStrategy: RollingUpdate
+  terminationGracePeriodSeconds: 60
+  livenessProbe:
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+
+scaling:
+  enabled: true
+  minReplicas: 5
+  maxReplicas: 30
+  targetUtilization: 80
+
+
+## VerneMQ settings
+additionalEnv:
+  - name: DOCKER_VERNEMQ_USER_mqttcli
+    value: "lsmqtt"
+  - name: DOCKER_VERNEMQ_VMQ_PASSWD.password_file
+    value:  "/etc/vernemq/vmq.passwd"
+  - name: DOCKER_VERNEMQ_ACCEPT_EULA
+    value: "yes"
+  - name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
+    value: "on"
+  - name: DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT
+    value: "on"
+  - name: DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT
+    value: "on"
+  - name: DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT
+    value: "on"
+  - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
+    value: "off"
+  - name: DOCKER_VERNEMQ_LISTENER__TCP__BUFFER_SIZES
+    value: "4096,16384,32768"
+  - name: DOCKER_VERNEMQ_LISTENER__TCP__MAX_CONNECTIONS
+    value: "100000"
+  - name: DOCKER_VERNEMQ_LISTENER__TCP__NR_OF_ACCEPTORS
+    value: "1000"
+#  - name: DOCKER_VERNEMQ_MAX_CLIENT_ID_SIZE
+#    value: "100"
+#  - name: DOCKER_VERNEMQ_MAX_ONLINE_MESSAGES
+#    value: "10000"
+#  - name: DOCKER_VERNEMQ_MAX_OFFLINE_MESSAGES
+#    value: "-1"
+#  - name: DOCKER_VERNEMQ_LISTENER__SSL__CAFILE
+#    value: "/etc/ssl/vernemq/tls.crt"
+#  - name: DOCKER_VERNEMQ_LISTENER__SSL__CERTFILE
+#    value: "/etc/ssl/vernemq/tls.crt"
+#  - name: DOCKER_VERNEMQ_LISTENER__SSL__KEYFILE
+#    value: "/etc/ssl/vernemq/tls.key"
+
+monitoring:
+  enabled: true

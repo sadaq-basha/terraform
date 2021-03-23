@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ls-dashboard-env
+  namespace: application
+data:
+  APP_APP_CODE: MQ==
+  APP_APP_ID: MQ==
+  APP_API_KEY: azdIckUzZjFvSVllVHhmUHFyMjZoUHhiOFVOb2xHNXlnTDJPazhDbEhBcw==

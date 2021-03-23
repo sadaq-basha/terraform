@@ -1,0 +1,95 @@
+
+b2b-prod.livesmart.co.jp
+dashboard.livesmart.co.jp
+tokyogas-db.livesmart.co.jp
+
+-
+
+jenkins.prd.live-smart.io
+
+CLB:
+    a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com
+
+---
+
+mqtt-b2b-prod.livesmart.co.jp
+
+NLB:
+a15878381d3b3451c82dc7f0eac2036a-2111946613.ap-northeast-1.elb.amazonaws.com
+
+
+
+----------------------------------------
+
+
+INNGRESS
+======================
+
+NAME
+HOSTS
+ADDRESS
+PORTS
+--------
+
+jenkins
+jenkins.prd.live-smart.io
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com
+80, 443
+
+---
+
+b2b-rabbitmq-ha
+rabbitmq-2c98ao.prd.live-smart.io
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com
+80, 443
+
+---
+
+
+cm-acme-http-solver-cdnkj
+kubeops-2c98ao.prd.live-smart.io
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com
+80
+
+cm-acme-http-solver-p9fq4            
+am-2c98ao.prd.live-smart.io           
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com   
+80
+
+cm-acme-http-solver-qdw6r            
+grafana-2c98ao.prd.live-smart.io      
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com
+80
+
+cm-acme-http-solver-xrtxz          
+prometheus-2c98ao.prd.live-smart.io   
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com   80        22m
+
+kube-ops-view
+kubeops-2c98ao.prd.live-smart.io      
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com   80, 443   24m
+
+kube-prometheus-stack-alertmanager   
+am-2c98ao.prd.live-smart.io           
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com   80, 443   22m
+
+kube-prometheus-stack-grafana        
+grafana-2c98ao.prd.live-smart.io      
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com   80, 443   22m
+
+kube-prometheus-stack-prometheus     
+prometheus-2c98ao.prd.live-smart.io   
+a73bb735446dc490dad25f6cb9ad9cf8-12d0f1e547bf55ee.elb.ap-northeast-1.amazonaws.com   80, 443   22m
+
+
+
+----------------------------------------
+
+NLB
+==================
+
+b2b-vernemq           
+LoadBalancer  
+172.20.140.191  
+a15878381d3b3451c82dc7f0eac2036a-2111946613.ap-northeast-1.elb.amazonaws.com
+8888:32621/TCP,1885:32219/TCP  46s

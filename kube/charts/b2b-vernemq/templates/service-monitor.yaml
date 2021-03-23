@@ -1,0 +1,20 @@
+{{- if .Values.monitoring.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "vernemq.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "vernemq.name" . }}
+    helm.sh/chart: {{ include "vernemq.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "vernemq.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  endpoints:
+    - port: "prometheus"
+      path: /metrics
+      interval: 10s
+{{- end }}
