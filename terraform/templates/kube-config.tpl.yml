@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: external-resources
+  namespace: "${b2b_app_namespace}"
+data:
+  APP_MYSQL_HOST: "${mysql_host}"
+  APP_MYSQL_PORT: "${mysql_port}"
+  APP_MYSQL_USER: "${mysql_user}"
+  APP_MYSQL_PASS: "${mysql_password}"
+  APP_MYSQL_DB: "${mysql_db}"
+
+  APP_REDIS_HOST: "${redis_host}"
+  APP_REDIS_PORT: "${redis_port}"
+
+  APP_MONGO_HOST: "${mongo_host}"
+  APP_MONGO_PORT: "${mongo_port}"
+  APP_MONGO_USER: "${mongo_user}"
+  APP_MONGO_PASSWORD: "${mongo_password}"
+  APP_MONGO_SSL: "${mongo_ssl}"
+
+## TODO Need to add B2C variables in here
